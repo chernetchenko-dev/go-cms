@@ -1,6 +1,6 @@
 # go-cms
 
-Flat-file CMS на PHP для экосистемы chernetchenko.pro.  
+Flat-file CMS на PHP
 Статьи в Markdown, контент без БД, дайджест новостей через AI, мультисайтовость из коробки.
 
 > **OVC Design System v3.0** — терминальная эстетика, дуальный режим dev/manager, светлая и тёмная тема.
