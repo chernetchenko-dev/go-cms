@@ -1,0 +1,24 @@
+{
+    "main": [
+        "interests:Интересы",
+        "articles:Статьи",
+        "projects:Проекты",
+        "cases:Кейсы"
+    ],
+    "waf": [
+        "base:Обучение",
+        "practice:Практика",
+        "cases:Кейсы",
+        "tools:Инструменты"
+    ],
+    "toc": [
+        "estimates:Оценки",
+        "management:Управление",
+        "training:Обучение"
+    ],
+    "fun": [
+        "general:Общая лента",
+        "games:Игры",
+        "tools:Инструменты"
+    ]
+}

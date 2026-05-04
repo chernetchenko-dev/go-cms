@@ -1,0 +1,9 @@
+{
+    "fun": [
+        {"title": "BIM Тетрис", "url": "/fun/bim-tetris.php", "badge": "hot", "section": "games"},
+        {"title": "GIP Quest", "url": "/fun/gip-quest.php", "badge": "beta", "section": "games"}
+    ],
+    "toc": [
+        {"title": "ПИР-калькулятор", "url": "/calc.php", "badge": "", "section": "estimates"}
+    ]
+}

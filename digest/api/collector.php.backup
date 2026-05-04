@@ -1,0 +1,156 @@
+<?php
+/**
+ * collector.php — точка сбора данных
+ *
+ * Порядок:
+ * 1. RSS-фиды из sources.json (рабочий канал)
+ * 2. Специализированные коллекторы (OpenRouter, HuggingFace, GitHub, Habr, PwC)
+ * 3. Google News RSS (может быть заблокирован хостингом)
+ *
+ * Запуск через cron: php collector.php
+ * Запуск через admin: shell_exec("php collector.php") — CLI, без токена
+ * Запуск через веб:  collector.php?token=ТОКЕН
+ */
+
+require_once dirname(__FILE__) . '/../core/Config.php';
+
+if (!defined('DIGEST_ACCESS')) {
+    http_response_code(403);
+    exit('Access Denied');
+}
+
+// Токен проверяем только при веб-запросе (не CLI и не внутренний вызов)
+$isCli = (php_sapi_name() === 'cli');
+$isInternal = defined('COLLECTOR_INTERNAL') && COLLECTOR_INTERNAL === true;
+
+if (!$isCli && !$isInternal) {
+    $token = isset($_GET['token']) ? $_GET['token'] : '';
+    if (!hash_equals(DIGEST_CRON_TOKEN, $token)) {
+        http_response_code(403);
+        echo json_encode(array('status' => 'error', 'message' => 'Invalid token'));
+        exit;
+    }
+    header('Content-Type: application/json; charset=utf-8');
+}
+
+require_once dirname(__FILE__) . '/../core/Db.php';
+
+// === КОЛЛЕКТОРЫ ===
+$dir = dirname(__FILE__) . '/../collectors/';
+
+require_once $dir . 'rss_feed.php';
+
+$specialized = array('openrouter.php', 'huggingface.php', 'github.php', 'rag.php', 'habr.php', 'paperswithcode.php');
+foreach ($specialized as $f) {
+    $p = $dir . $f;
+    if (file_exists($p)) require_once $p;
+}
+
+if (file_exists($dir . 'search.php')) require_once $dir . 'search.php';
+
+// === БД ===
+try {
+    $db = Db::getInstance();
+    $db->initTables();
+    $pdo = $db->getConnection();
+} catch (Exception $e) {
+    $errMsg = 'DB Error: ' . $e->getMessage();
+    error_log($errMsg);
+    echo json_encode(array('status' => 'error', 'message' => $errMsg));
+    exit;
+}
+
+// === СБОР ===
+$allItems   = array();
+$rssItems   = array();
+$searchItems = array();
+
+// 1. RSS (стабильный канал)
+try {
+    if (function_exists('collectRssAll')) {
+        $rssItems = collectRssAll();
+        if (is_array($rssItems)) $allItems = array_merge($allItems, $rssItems);
+    }
+} catch (Exception $e) {
+    error_log('RSS: ' . $e->getMessage());
+}
+
+// 2. Google News RSS (может быть заблокирован) — последним
+try {
+    if (function_exists('collectSearchAll')) {
+        $searchItems = collectSearchAll();
+        if (is_array($searchItems)) $allItems = array_merge($allItems, $searchItems);
+    }
+} catch (Exception $e) {
+    error_log('Search: ' . $e->getMessage());
+}
+
+// 3. API-коллекторы
+$apiFuncs = array('collectOpenRouter', 'collectHuggingFace', 'collectGitHub',
+                  'collectRAG', 'collectHabr', 'collectPapersWithCode');
+foreach ($apiFuncs as $fn) {
+    if (!function_exists($fn)) continue;
+    try {
+        $items = $fn();
+        if (is_array($items)) $allItems = array_merge($allItems, $items);
+    } catch (Exception $e) {
+        error_log($fn . ': ' . $e->getMessage());
+    }
+}
+
+// === СОХРАНЕНИЕ ===
+$stmt = $pdo->prepare(
+    "INSERT IGNORE INTO digest_events (title, url, source, category, description) VALUES (?, ?, ?, ?, ?)"
+);
+
+$newCount = 0;
+$newIds   = array();
+
+foreach ($allItems as $item) {
+    $url = trim(isset($item['link']) ? $item['link'] : (isset($item['url']) ? $item['url'] : ''));
+    if (empty($item['title']) || empty($url)) continue;
+
+    $cat  = isset($item['category']) ? $item['category'] : 'ai';
+    $desc = mb_substr(strip_tags(isset($item['description']) ? $item['description'] : ''), 0, 250);
+
+    try {
+        $stmt->execute(array(
+            mb_substr($item['title'], 0, 255),
+            mb_substr($url, 0, 1024),
+            mb_substr(isset($item['source']) ? $item['source'] : '', 0, 50),
+            $cat,
+            $desc,
+        ));
+        $newId = (int)$pdo->lastInsertId();
+        if ($newId > 0) {
+            $newCount++;
+            $newIds[] = $newId;
+        }
+    } catch (PDOException $e) {
+        // Дубль по UNIQUE url — пропускаем
+    }
+}
+
+// === AI-СУММАРИЗАЦИЯ (фоновая) ===
+$summarizePath = dirname(__FILE__) . '/summarize.php';
+foreach ($newIds as $id) {
+    $cmd = sprintf('php %s %d > /dev/null 2>&1 &', escapeshellarg($summarizePath), $id);
+    exec($cmd);
+}
+
+// === РЕЗУЛЬТАТ ===
+$result = array(
+    'status'    => 'ok',
+    'total'     => count($allItems),
+    'new'       => $newCount,
+    'ai_queued' => count($newIds),
+    'rss'       => count($rssItems),
+    'search'    => count($searchItems),
+    'time'      => date('H:i:s'),
+);
+
+if ($isCli || $isInternal) {
+    echo "Собрано: {$result['total']} | Новых: {$result['new']} | RSS: {$result['rss']} | AI: {$result['ai_queued']}\n";
+} else {
+    echo json_encode($result, JSON_UNESCAPED_UNICODE);
+}

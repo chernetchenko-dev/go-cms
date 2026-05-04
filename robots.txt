@@ -1,0 +1,49 @@
+# ==========================================
+# robots.txt — chernetchenko.pro
+# Обновлено: 2026-04
+# ==========================================
+
+# Глобальные правила
+User-agent: *
+Allow: /
+
+# Системные директории — закрыть
+Disallow: /admin/
+Disallow: /digest/admin/
+Disallow: /digest/api/
+Disallow: /digest/core/
+Disallow: /digest/collectors/
+Disallow: /manager/
+Disallow: /tmp/
+Disallow: /cache/
+
+# Служебные файлы — закрыть
+Disallow: /debug_env.php
+Disallow: /1.php
+Disallow: /*.bak$
+Disallow: /*?*token=
+
+# Яндекс — очистка UTM и зеркал
+User-agent: Yandex
+Allow: /
+Disallow: /admin/
+Disallow: /digest/admin/
+Disallow: /digest/api/
+Disallow: /digest/core/
+Disallow: /digest/collectors/
+Disallow: /manager/
+Disallow: /debug_env.php
+Clean-Param: utm_source&utm_medium&utm_campaign&yclid&from&ref
+
+# Google
+User-agent: Googlebot
+Allow: /
+Disallow: /admin/
+Disallow: /digest/admin/
+Disallow: /digest/api/
+Disallow: /digest/core/
+Disallow: /debug_env.php
+
+# Sitemap и хост
+Sitemap: https://chernetchenko.pro/sitemap.xml
+Host: chernetchenko.pro

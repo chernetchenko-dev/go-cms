@@ -1,0 +1,150 @@
+{
+    "meta": {
+        "site_id": "main",
+        "title": "Олег Чернетченко — Проектирование, BIM, ИИ, Управление",
+        "description": "Директор по проектированию. BIM, RAG, ИИ в строительстве без хайпа. Теория ограничений, ПИР-калькуляторы, нетворкинг.",
+        "keywords": "BIM, RAG, ИИ, проектирование, ТОС, ГИП, chernetchenko, CRAG, LRAG",
+        "canonical": "https://chernetchenko.pro/"
+    },
+    "hero": {
+        "title_line1": "Стройка, проекты, код,",
+        "title_line2": "ИИ, мемы.",
+        "subtitle": "Олег Чернетченко · ТИМ разработчик · Директор по проектированию",
+        "description": "Разбираю BIM, RAG, ИИ и Теорию ограничений без маркетинговой воды. Практика, калькуляторы, инструменты и живой нетворкинг. 15 лет в проектировании крупных объектов."
+    },
+    "about": {
+        "title": "👤 Обо мне",
+        "visible": true,
+        "columns": [
+            {
+                "icon": "🧠",
+                "title": "Интересы",
+                "items": [
+                    "ТИМ/BIM моделирование и координация",
+                    "RAG и CRAG: нейросети по нормам",
+                    "Автоматизация (Python, pyRevit, MCP)",
+                    "Управление проектами и ТОС"
+                ]
+            },
+            {
+                "icon": "🚀",
+                "title": "Проекты экосистемы",
+                "items_links": [
+                    {"text": "WAF: Прикладной ИИ", "url": "https://waf.chernetchenko.pro"},
+                    {"text": "TOC: Калькулятор ПИР", "url": "https://toc.chernetchenko.pro"},
+                    {"text": "FUN: Лаборатория", "url": "https://fun.chernetchenko.pro"},
+                    {"text": "Дайджест BIM & AI", "url": "/digest/"}
+                ]
+            },
+            {
+                "icon": "📬",
+                "title": "Контакты",
+                "items_links": [
+                    {"text": "Санкт-Петербург, Россия", "url": ""},
+                    {"text": "+7 (921) 774-70-90", "url": "tel:+79217747090"},
+                    {"text": "oleg@chernetchenko.ru", "url": "mailto:oleg@chernetchenko.ru"},
+                    {"text": "Telegram: @chernetchenko", "url": "https://t.me/chernetchenko"},
+                    {"text": "Канал: @wearefired", "url": "https://t.me/wearefired"},
+                    {"text": "Открыт к коллаборациям и выступлениям", "url": ""}
+                ]
+            }
+        ]
+    },
+    "nav_chips": [
+        {"id": "about", "label": "👤 Обо мне", "link": "#about"},
+        {"id": "dev", "label": "🛠 Мои разработки", "link": "#dev"},
+        {"id": "net", "label": "🤝 Нетворкинг", "link": "#net"},
+        {"id": "tools", "label": "📦 Полезное", "link": "#tools"},
+        {"id": "articles", "label": "📰 Статьи", "link": "#articles"}
+    ],
+    "sections": [
+        {
+            "id": "dev",
+            "type": "dev_grid",
+            "title": "🛠 Мои разработки",
+            "visible": true,
+            "cards": [
+                {
+                    "tag": "RAG / CRAG / LRAG",
+                    "title": "Генерация с дополненной выборкой",
+                    "desc": "Что это, зачем и почему оно вам точно надо. От простого к сложному.",
+                    "url": "https://rag.chernetchenko.pro",
+                    "target": "_blank",
+                    "color_class": "c-rag"
+                },
+                {
+                    "tag": "Прикладной ИИ",
+                    "title": "ИИ в строительстве без магии",
+                    "desc": "Обучение, практика, кейсы. Портал для инженеров от практиков.",
+                    "url": "https://waf.chernetchenko.pro",
+                    "target": "_blank",
+                    "color_class": "c-waf"
+                },
+                {
+                    "tag": "Теория ограничений",
+                    "title": "Расчёты и управление проектами",
+                    "desc": "Про ТОС, экономику и Элияху Голдратта. Калькуляторы ПИР.",
+                    "url": "https://toc.chernetchenko.pro",
+                    "target": "_blank",
+                    "color_class": "c-toc"
+                },
+                {
+                    "tag": "Лаборатория",
+                    "title": "Лаборатория приколов",
+                    "desc": "Инженерный нуар, игры, инструменты и немного сатиры про проектную рутину.",
+                    "url": "https://fun.chernetchenko.pro",
+                    "target": "_blank",
+                    "color_class": "c-fun"
+                }
+            ]
+        },
+        {
+            "id": "net",
+            "type": "net_grid",
+            "title": "🤝 Общение с естественным разумом",
+            "visible": true,
+            "cards": [
+                {
+                    "title": "🎤 Мои выступления",
+                    "desc": "СПбГАСУ, 100+ TechnoBuild, Legko BIM, доклады и мастер-классы",
+                    "url": "/speech.php"
+                },
+                {
+                    "title": "🤝 Инженерия кулуаров",
+                    "desc": "Контакты, коллаборации, обмен опытом и поиск решений",
+                    "url": "/networking.php"
+                },
+                {
+                    "title": "📰 Дайджест",
+                    "desc": "BIM & AI новости. AI-only сбор без RSS. Сводки каждый день.",
+                    "url": "/digest/"
+                }
+            ]
+        },
+        {
+            "id": "tools",
+            "type": "tool_box",
+            "title": "📦 Полезное",
+            "visible": true,
+            "content": {
+                "headline": "IFC просмотрщик онлайн",
+                "version": "BIM AI Viewer v7.2 \"Federated-BIM\"",
+                "desc": "Открывай тяжелые модели прямо в браузере. Без установки софта.",
+                "url": "/bim/",
+                "btn_text": "Открыть просмотрщик →"
+            }
+        },
+        {
+            "id": "articles",
+            "type": "cms_loop",
+            "title": "📰 О чём мы дискутируем",
+            "visible": true,
+            "cms_params": {
+                "site": "main",
+                "section": "",
+                "include_drafts": false,
+                "limit": 0
+            }
+        }
+    ]
+}
